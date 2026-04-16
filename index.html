@@ -39,7 +39,6 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 32px;
       cursor: none;
     }
 
@@ -69,28 +68,6 @@
     @keyframes splashGlow {
       from { filter: drop-shadow(0 0 30px rgba(255,213,0,0.25)); }
       to   { filter: drop-shadow(0 0 70px rgba(255,213,0,0.6)); }
-    }
-
-    .splash-enter {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.4em;
-      text-transform: uppercase;
-      color: rgba(255,213,0,0.5);
-      border: 1px solid rgba(255,213,0,0.15);
-      padding: 12px 32px;
-      animation: enterBlink 2s ease-in-out infinite;
-      cursor: none;
-    }
-
-    .splash-enter:hover {
-      color: var(--color-yellow);
-      border-color: rgba(255,213,0,0.5);
-    }
-
-    @keyframes enterBlink {
-      0%, 100% { opacity: 1; }
-      50%       { opacity: 0.4; }
     }
 
     @keyframes splashOut {
@@ -584,7 +561,7 @@
       .cursor    { display: none !important; }
       /* pointer required on iOS so tap fires click on div elements */
       .splash    { cursor: pointer; }
-      .splash-enter, .sidebar-nav a, .header-btn,
+      .sidebar-nav a, .header-btn,
       .cart-close, .cart-item-qty button, .cart-checkout-btn,
       .search-wrap input, .card, .sidebar-foot-icon,
       .sidebar-foot a { cursor: auto; }
@@ -791,7 +768,6 @@
         <img class="splash-logo-img" src="crtzlogo.png" alt="CRTZ">
       </div>
     </div>
-    <div class="splash-enter">&#9670;&nbsp; Click to Enter &nbsp;&#9670;</div>
   </div>
 
   <!-- Shell -->
