@@ -582,7 +582,9 @@
     @media (pointer: coarse) {
       html, body { cursor: auto; }
       .cursor    { display: none !important; }
-      .splash, .splash-enter, .sidebar-nav a, .header-btn,
+      /* pointer required on iOS so tap fires click on div elements */
+      .splash    { cursor: pointer; }
+      .splash-enter, .sidebar-nav a, .header-btn,
       .cart-close, .cart-item-qty button, .cart-checkout-btn,
       .search-wrap input, .card, .sidebar-foot-icon,
       .sidebar-foot a { cursor: auto; }
@@ -1072,6 +1074,13 @@
     }
 
     /* ─── Splash ─── */
+    // Belt-and-suspenders: touchend fires before click on iOS,
+    // ensuring the splash dismisses on first tap on any device.
+    document.getElementById('splash').addEventListener('touchend', function(e) {
+      e.preventDefault();
+      enter();
+    });
+
     function enter() {
       sessionStorage.setItem('crtz_entered', '1');
       const splash = document.getElementById('splash');
