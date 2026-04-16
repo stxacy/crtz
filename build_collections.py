@@ -656,6 +656,17 @@ def build_page(cat_slug, cat_label, cards_html, count):
       .grid {{ grid-template-columns: repeat(2, 1fr); gap: 2px; }}
       .collection-head {{ padding: 16px; }}
     }}
+
+    /* ─── Footer ─── */
+    .site-footer {{
+      padding: 28px 18px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,213,0,0.3);
+      text-align: center;
+    }}
   </style>
 </head>
 <body>
@@ -713,6 +724,7 @@ def build_page(cat_slug, cat_label, cards_html, count):
         {empty_msg}
       </div>
 
+      <footer class="site-footer">Copyright &copy; 2026, CRTZRW.</footer>
     </main>
   </div>
 

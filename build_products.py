@@ -2009,6 +2009,17 @@ def build_page(p):
 
     .product-links a:hover {{ color: var(--color-yellow); }}
 
+    /* ─── Footer ─── */
+    .site-footer {{
+      padding: 28px 18px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,213,0,0.3);
+      text-align: center;
+    }}
+
     /* ─── No-size warning ─── */
     .size-warning {{
       font-size: 10px;
@@ -2167,6 +2178,8 @@ def build_page(p):
 
         </div>
       </div>
+
+      <footer class="site-footer">Copyright &copy; 2026, CRTZRW.</footer>
     </main>
 
   </div>
