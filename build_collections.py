@@ -173,12 +173,10 @@ COLLECTIONS = [
 NAV = [
     ("all",         "All",           "../index.html"),
     ("classic",     "Classic",       "classic.html"),
-    ("cords",       "Cords",         None),         # no products, disabled
     ("t-shirts",    "T-Shirts",      "t-shirts.html"),
     ("tops",        "Tops / Jackets","tops.html"),
     ("sweatshirts", "Sweatshirts",   "sweatshirts.html"),
     ("jackets",     "Jackets",       "jackets.html"),
-    ("shirts",      "Shirts",        None),          # no products, disabled
     ("bottoms",     "Bottoms",       "bottoms.html"),
     ("shorts",      "Shorts",        "shorts.html"),
     ("hats",        "Hats",          "hats.html"),
@@ -701,7 +699,6 @@ def build_page(cat_slug, cat_label, cards_html, count):
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
           Cart (<span id="cart-count">0</span>)
         </button>
-        <button class="header-btn header-checkout">Checkout</button>
       </header>
 
       <div class="collection-head">

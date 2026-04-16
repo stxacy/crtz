@@ -1881,7 +1881,7 @@ def build_page(p):
       padding: 0 10px;
       background: transparent;
       border: 1px solid rgba(255,213,0,0.2);
-      color: rgba(255,213,0,0.5);
+      color: rgba(204, 40, 40, 1);
       font-family: var(--font-body);
       font-size: 11px;
       font-weight: 700;
@@ -1964,7 +1964,7 @@ def build_page(p):
       font-weight: 400;
       letter-spacing: 0.06em;
       text-transform: uppercase;
-      color: rgba(255,213,0,0.35);
+      color: rgba(204, 40, 40, 1);
       margin-bottom: 20px;
     }}
 
@@ -2051,12 +2051,10 @@ def build_page(p):
         <ul>
           <li><a href="../index.html">All</a></li>
           <li><a href="../index.html">Classic</a></li>
-          <li><a href="../index.html">Cords</a></li>
           <li><a href="../index.html">T-Shirts</a></li>
           <li><a href="../index.html">Tops / Jackets</a></li>
           <li><a href="../index.html">Sweatshirts</a></li>
           <li><a href="../index.html">Jackets</a></li>
-          <li><a href="../index.html">Shirts</a></li>
           <li><a href="../index.html">Bottoms</a></li>
           <li><a href="../index.html">Shorts</a></li>
           <li><a href="../index.html">Hats</a></li>
@@ -2098,7 +2096,6 @@ def build_page(p):
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
             Cart (<span id="cart-count">0</span>)
           </button>
-          <button class="header-btn header-checkout">Checkout</button>
         </div>
       </div>
 
