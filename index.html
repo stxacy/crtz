@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRTZ — Corteiz</title>
+  <link rel="stylesheet" href="design-system.css">
+  <link href="https://fonts.googleapis.com/css2?family=Karla:wght@400;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      font-family: var(--font-body);
+      background: var(--color-black);
+      color: var(--color-yellow);
+      cursor: none;
+    }
+
+    /* ─── Cursor ─── */
+    .cursor {
+      position: fixed;
+      width: 7px;
+      height: 7px;
+      background: var(--color-white);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 999999;
+      transform: translate(-50%, -50%);
+    }
+
+    /* ─── Splash ─── */
+    .splash {
+      position: fixed;
+      inset: 0;
+      z-index: var(--z-modal);
+      background: var(--color-black);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+      cursor: none;
+    }
+
+    .splash-logo-wrap {
+      perspective: 900px;
+    }
+
+    .splash-logo-spin {
+      animation: spin3d 12s linear infinite;
+    }
+
+    @keyframes spin3d {
+      from { transform: rotateY(0deg)   rotateX(6deg); }
+      to   { transform: rotateY(360deg) rotateX(6deg); }
+    }
+
+    .splash-logo-img {
+      width: clamp(210px, 37vw, 390px);
+      height: auto;
+      display: block;
+      /* Scale up inside clip so the oval ring is cropped out */
+      transform: scale(1.18);
+      clip-path: ellipse(42% 44% at 50% 50%);
+      animation: splashGlow 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes splashGlow {
+      from { filter: drop-shadow(0 0 30px rgba(255,213,0,0.25)); }
+      to   { filter: drop-shadow(0 0 70px rgba(255,213,0,0.6)); }
+    }
+
+    .splash-enter {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: rgba(255,213,0,0.5);
+      border: 1px solid rgba(255,213,0,0.15);
+      padding: 12px 32px;
+      animation: enterBlink 2s ease-in-out infinite;
+      cursor: none;
+    }
+
+    .splash-enter:hover {
+      color: var(--color-yellow);
+      border-color: rgba(255,213,0,0.5);
+    }
+
+    @keyframes enterBlink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.4; }
+    }
+
+    @keyframes splashOut {
+      to { opacity: 0; pointer-events: none; }
+    }
+
+    .splash.out {
+      animation: splashOut 0.5s ease forwards;
+    }
+
+    /* ─── App shell ─── */
+    .shell {
+      display: grid;
+      grid-template-columns: 162px 1fr;
+      height: 100vh;
+      overflow: hidden;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .shell.visible { opacity: 1; }
+
+    /* ─── Sidebar ─── */
+    .sidebar {
+      background: var(--color-black);
+      border-right: 1px solid rgba(255,255,255,0.05);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .sidebar-brand {
+      padding: 18px 14px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      perspective: 900px;
+    }
+
+    .sidebar-brand img {
+      width: 100px;
+      height: auto;
+      display: block;
+      transform: scale(1.18);
+      clip-path: ellipse(42% 44% at 50% 50%);
+      animation: spin3d 12s linear infinite, splashGlow 3s ease-in-out infinite alternate;
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px 0;
+      scrollbar-width: none;
+    }
+
+    .sidebar-nav::-webkit-scrollbar { display: none; }
+
+    .sidebar-nav ul { list-style: none; }
+
+    .sidebar-nav a {
+      display: block;
+      padding: 6px 14px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,213,0,0.45);
+      text-decoration: none;
+      transition: color 0.12s, background 0.12s;
+      cursor: none;
+      white-space: nowrap;
+    }
+
+    .sidebar-nav a:hover { color: rgba(255,213,0,0.85); }
+    .sidebar-nav a.active { color: var(--color-yellow); }
+
+    .sidebar-foot {
+      flex-shrink: 0;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      padding: 14px 14px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .sidebar-foot-icon {
+      margin-bottom: 10px;
+      display: block;
+      cursor: none;
+    }
+
+    .sidebar-foot-icon svg {
+      height: 22px;
+      width: 22px;
+      color: rgba(255,213,0,0.35);
+      transition: color 0.12s;
+    }
+
+    .sidebar-foot-icon:hover svg { color: rgba(255,213,0,0.75); }
+
+    .sidebar-foot a {
+      display: block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,213,0,0.3);
+      text-decoration: none;
+      padding: 3px 0;
+      transition: color 0.12s;
+      cursor: none;
+    }
+
+    .sidebar-foot a:hover { color: rgba(255,213,0,0.75); }
+
+    /* ─── Main ─── */
+    .main {
+      height: 100vh;
+      overflow-y: auto;
+      padding: 0;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.08) transparent;
+    }
+
+    .main::-webkit-scrollbar { width: 4px; }
+    .main::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
+
+    /* ─── Main header ─── */
+    .main-header {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 28px;
+      padding: 13px 18px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      position: sticky;
+      top: 0;
+      background: var(--color-black);
+      z-index: var(--z-sticky);
+    }
+
+    .search-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid rgba(255,213,0,0.25);
+      padding-bottom: 2px;
+    }
+
+    .search-wrap svg {
+      color: rgba(255,213,0,0.5);
+      flex-shrink: 0;
+    }
+
+    .search-wrap input {
+      background: transparent;
+      border: none;
+      outline: none;
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,213,0,0.5);
+      width: 90px;
+      cursor: none;
+    }
+
+    .search-wrap input::placeholder { color: rgba(255,213,0,0.35); }
+    .search-wrap input:focus { color: var(--color-yellow); }
+    .search-wrap input:focus + svg,
+    .search-wrap:focus-within svg { color: rgba(255,213,0,0.8); }
+    .search-wrap:focus-within { border-color: rgba(255,213,0,0.5); }
+
+    .header-btn {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: none;
+      border: none;
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,213,0,0.5);
+      cursor: none;
+      padding: 0;
+      transition: color 0.12s;
+    }
+
+    .header-btn:hover { color: var(--color-yellow); }
+    .header-btn svg { flex-shrink: 0; }
+
+    .header-checkout {
+      color: rgba(255,213,0,0.35);
+    }
+
+    /* ─── Cart drawer ─── */
+    .cart-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 320px;
+      height: 100vh;
+      background: #0a0a0a;
+      border-left: 1px solid rgba(255,255,255,0.06);
+      z-index: var(--z-drawer);
+      display: flex;
+      flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+    }
+
+    .cart-drawer.open { transform: translateX(0); }
+
+    .cart-drawer-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 18px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      flex-shrink: 0;
+    }
+
+    .cart-drawer-head span {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--color-yellow);
+    }
+
+    .cart-close {
+      background: none;
+      border: none;
+      color: rgba(255,213,0,0.4);
+      font-size: 16px;
+      cursor: none;
+      padding: 0;
+      transition: color 0.12s;
+      line-height: 1;
+    }
+
+    .cart-close:hover { color: var(--color-yellow); }
+
+    .cart-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 0;
+      scrollbar-width: none;
+    }
+
+    .cart-list::-webkit-scrollbar { display: none; }
+
+    .cart-empty {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,213,0,0.25);
+      padding: 24px 18px;
+    }
+
+    .cart-item {
+      display: flex;
+      gap: 12px;
+      padding: 12px 18px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .cart-item img {
+      width: 64px;
+      height: 64px;
+      object-fit: contain;
+      background: transparent;
+      flex-shrink: 0;
+    }
+
+    .cart-item-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .cart-item-name {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: rgba(255,213,0,0.8);
+      margin-bottom: 3px;
+      line-height: 1.35;
+    }
+
+    .cart-item-price {
+      font-size: 10px;
+      color: rgba(255,213,0,0.4);
+      margin-bottom: 8px;
+    }
+
+    .cart-item-qty {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .cart-item-qty button {
+      background: none;
+      border: 1px solid rgba(255,213,0,0.2);
+      color: rgba(255,213,0,0.6);
+      width: 20px;
+      height: 20px;
+      font-size: 13px;
+      line-height: 1;
+      cursor: none;
+      transition: border-color 0.12s, color 0.12s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cart-item-qty button:hover { border-color: var(--color-yellow); color: var(--color-yellow); }
+
+    .cart-item-qty span {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--color-yellow);
+      min-width: 16px;
+      text-align: center;
+    }
+
+    .cart-drawer-foot {
+      flex-shrink: 0;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 16px 18px 20px;
+    }
+
+    .cart-total {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,213,0,0.6);
+      margin-bottom: 14px;
+    }
+
+    .cart-total span {
+      color: var(--color-yellow);
+    }
+
+    .cart-checkout-btn {
+      width: 100%;
+      height: 44px;
+      background: var(--color-yellow);
+      color: var(--color-black);
+      border: none;
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      cursor: none;
+      transition: opacity 0.12s;
+    }
+
+    .cart-checkout-btn:hover { opacity: 0.85; }
+
+    .cart-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: var(--z-overlay);
+      display: none;
+    }
+
+    .cart-overlay.open { display: block; }
+
+    /* ─── Card add feedback ─── */
+    .card {
+      position: relative;
+    }
+
+    .card-add-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 10px;
+      opacity: 0;
+      transition: opacity 0.2s;
+      pointer-events: none;
+    }
+
+    .card:hover .card-add-overlay { opacity: 1; }
+
+    .card-add-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-black);
+      background: var(--color-yellow);
+      padding: 5px 12px;
+    }
+
+    /* ─── Product grid ─── */
+    .grid-wrap { padding: 18px; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+
+    /* ─── Product card ─── */
+    .card {
+      cursor: none;
+    }
+
+    .card-img {
+      aspect-ratio: 1 / 1;
+      background: var(--color-black);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .card-img img {
+      width: 85%;
+      height: 85%;
+      object-fit: contain;
+      display: block;
+      margin: auto;
+      transition: transform 0.4s ease;
+      image-rendering: auto;
+    }
+
+    .card:hover .card-img img { transform: scale(1.04); }
+
+    /* Sale badge */
+    .card-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      background: var(--color-yellow);
+      color: var(--color-black);
+    }
+
+    .card-badge--sold { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); }
+
+    .card-info {
+      padding: 8px 0 18px;
+    }
+
+    .card-name {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: rgba(255,213,0,0.85);
+      margin-bottom: 3px;
+      line-height: 1.35;
+    }
+
+    .card-price {
+      font-size: 11px;
+      font-weight: 400;
+      color: rgba(255,213,0,0.4);
+      letter-spacing: 0.02em;
+    }
+
+    .card-price--sale {
+      color: var(--color-yellow);
+    }
+
+    /* ─── Mobile top bar — hidden on desktop ─── */
+    .mobile-topbar       { display: none; }
+    .mobile-nav-overlay  { display: none; }
+    .mobile-search-overlay { display: none; }
+
+    /* ─── Remove custom cursor on touch devices ─── */
+    @media (pointer: coarse) {
+      html, body { cursor: auto; }
+      .cursor    { display: none !important; }
+      .splash, .splash-enter, .sidebar-nav a, .header-btn,
+      .cart-close, .cart-item-qty button, .cart-checkout-btn,
+      .search-wrap input, .card, .sidebar-foot-icon,
+      .sidebar-foot a { cursor: auto; }
+    }
+
+    /* ─── Tablet + Mobile (≤1024px) ─── */
+    @media (max-width: 1024px) {
+      .shell {
+        grid-template-columns: 1fr;
+        grid-template-rows: 52px 1fr;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      /* Hide desktop sidebar and header bar */
+      .sidebar     { display: none; }
+      .main-header { display: none; }
+
+      /* ── Top bar ── */
+      .mobile-topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 16px;
+        height: 52px;
+        background: var(--color-black);
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        position: relative;
+        z-index: var(--z-sticky);
+        flex-shrink: 0;
+      }
+
+      /* Left — catalog toggle */
+      .mobile-catalog-btn {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        background: none;
+        border: none;
+        color: rgba(255,213,0,0.45);
+        font-family: var(--font-body);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        padding: 0;
+        cursor: pointer;
+        transition: color 0.12s;
+        flex-shrink: 0;
+      }
+      .mobile-catalog-btn:hover,
+      .mobile-catalog-btn.active { color: var(--color-yellow); }
+
+      /* Centre — rotating logo */
+      .mobile-topbar-logo {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        perspective: 900px;
+        line-height: 0;
+      }
+      .mobile-topbar-logo-spin { animation: spin3d 12s linear infinite; }
+      .mobile-topbar-logo img {
+        width: 46px;
+        height: 46px;
+        display: block;
+        transform: scale(1.18);
+        clip-path: ellipse(42% 44% at 50% 50%);
+        animation: splashGlow 3s ease-in-out infinite alternate;
+      }
+
+      /* Right — actions */
+      .mobile-actions {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex-shrink: 0;
+      }
+
+      .mobile-action-btn {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        background: none;
+        border: none;
+        color: rgba(255,213,0,0.45);
+        font-family: var(--font-body);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        padding: 0;
+        cursor: pointer;
+        transition: color 0.12s;
+      }
+      .mobile-action-btn:hover,
+      .mobile-action-btn.active { color: var(--color-yellow); }
+
+      /* ── Catalog nav overlay ── */
+      .mobile-nav-overlay {
+        position: fixed;
+        top: 52px;
+        left: 0;
+        right: 0;
+        background: #0a0a0a;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        z-index: var(--z-drawer);
+        padding: 14px 16px 16px;
+      }
+      .mobile-nav-overlay.open { display: block; }
+
+      .mobile-nav-overlay ul {
+        list-style: none;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .mobile-nav-overlay a {
+        display: block;
+        padding: 7px 13px;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: rgba(255,213,0,0.5);
+        text-decoration: none;
+        border: 1px solid rgba(255,213,0,0.12);
+        transition: color 0.12s, border-color 0.12s;
+        cursor: pointer;
+      }
+      .mobile-nav-overlay a:hover,
+      .mobile-nav-overlay a.active {
+        color: var(--color-yellow);
+        border-color: rgba(255,213,0,0.35);
+      }
+
+      /* ── Search overlay ── */
+      .mobile-search-overlay {
+        position: fixed;
+        top: 52px;
+        left: 0;
+        right: 0;
+        background: #0a0a0a;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        z-index: var(--z-drawer);
+        padding: 12px 16px;
+      }
+      .mobile-search-overlay.open {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .mobile-search-overlay input {
+        flex: 1;
+        background: transparent;
+        border: none;
+        border-bottom: 1px solid rgba(255,213,0,0.25);
+        outline: none;
+        font-family: var(--font-body);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-yellow);
+        padding: 6px 0;
+        cursor: text;
+      }
+      .mobile-search-overlay input::placeholder { color: rgba(255,213,0,0.3); }
+      .mobile-search-close {
+        background: none;
+        border: none;
+        color: rgba(255,213,0,0.4);
+        font-size: 15px;
+        cursor: pointer;
+        padding: 0;
+        line-height: 1;
+        transition: color 0.12s;
+      }
+      .mobile-search-close:hover { color: var(--color-yellow); }
+    }
+
+    /* ─── Mobile grid (≤749px) ─── */
+    @media (max-width: 749px) {
+      .grid-wrap { padding: 10px; }
+      .grid { grid-template-columns: repeat(2, 1fr); gap: 2px; }
+    }
+
+    /* ─── Tablet grid (750px–1024px) ─── */
+    @media (min-width: 750px) and (max-width: 1024px) {
+      .grid-wrap { padding: 14px; }
+      .grid { grid-template-columns: repeat(3, 1fr); gap: 2px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cursor -->
+  <div class="cursor" id="cursor"></div>
+
+  <!-- Splash -->
+  <div class="splash" id="splash" onclick="enter()">
+    <div class="splash-logo-wrap">
+      <div class="splash-logo-spin">
+        <img class="splash-logo-img" src="crtzlogo.png" alt="CRTZ">
+      </div>
+    </div>
+    <div class="splash-enter">&#9670;&nbsp; Click to Enter &nbsp;&#9670;</div>
+  </div>
+
+  <!-- Shell -->
+  <div class="shell" id="shell">
+
+    <!-- Mobile top bar (tablet + mobile only) -->
+    <div class="mobile-topbar">
+
+      <!-- Left: catalog toggle -->
+      <button class="mobile-catalog-btn" id="mobile-catalog-btn" onclick="toggleMobileNav()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+          <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+        </svg>
+        Catalog
+      </button>
+
+      <!-- Centre: rotating logo -->
+      <div class="mobile-topbar-logo">
+        <div class="mobile-topbar-logo-spin">
+          <img src="crtzlogo.png" alt="CRTZ">
+        </div>
+      </div>
+
+      <!-- Right: search + cart + checkout -->
+      <div class="mobile-actions">
+        <button class="mobile-action-btn" id="mobile-search-btn" onclick="toggleMobileSearch()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <button class="mobile-action-btn" onclick="toggleCart()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          <span id="mobile-cart-count">0</span>
+        </button>
+        <button class="mobile-action-btn">Checkout</button>
+      </div>
+
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+      <div class="sidebar-brand">
+        <img src="crtzlogo.png" alt="CRTZ">
+      </div>
+
+      <nav class="sidebar-nav">
+        <ul>
+          <li><a href="index.html" class="active">All</a></li>
+          <li><a href="collections/classic.html">Classic</a></li>
+          <li><a href="#" style="opacity:0.25;pointer-events:none">Cords</a></li>
+          <li><a href="collections/t-shirts.html">T-Shirts</a></li>
+          <li><a href="collections/tops.html">Tops / Jackets</a></li>
+          <li><a href="collections/sweatshirts.html">Sweatshirts</a></li>
+          <li><a href="collections/jackets.html">Jackets</a></li>
+          <li><a href="#" style="opacity:0.25;pointer-events:none">Shirts</a></li>
+          <li><a href="collections/bottoms.html">Bottoms</a></li>
+          <li><a href="collections/shorts.html">Shorts</a></li>
+          <li><a href="collections/hats.html">Hats</a></li>
+          <li><a href="collections/bags.html">Bags</a></li>
+          <li><a href="collections/accessories.html">Accessories</a></li>
+          <li><a href="collections/womens.html">Womens</a></li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-foot">
+        <a href="https://www.instagram.com/corteiz" class="sidebar-foot-icon" target="_blank" rel="noopener">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-label="Instagram">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+            <circle cx="12" cy="12" r="4.5"/>
+            <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/>
+          </svg>
+        </a>
+        <a href="#">Archive</a>
+        <a href="#">Newsletter</a>
+        <a href="#">Shipping Policy</a>
+        <a href="#">Terms of Service</a>
+      </div>
+
+    </aside>
+
+    <!-- Main product area -->
+    <main class="main">
+
+      <!-- Header bar -->
+      <header class="main-header">
+        <div class="search-wrap">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="search-input" placeholder="Search">
+        </div>
+        <button class="header-btn" onclick="toggleCart()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          Cart (<span id="cart-count">0</span>)
+        </button>
+        <button class="header-btn header-checkout">Checkout</button>
+      </header>
+
+      <div class="grid-wrap">
+      <div class="grid" id="grid">
+
+        <!-- Island Puff Print -->
+        <div class="card" data-href="products/island-puff-zip-hoodie-black.html"><div class="card-img"><img src="images/island-puff-zip-hoodie-black.png" alt="Island Puff Print Zip Hoodie Black"></div><div class="card-info"><p class="card-name">Island Puff Print Zip Hoodie [Black]</p><p class="card-price">£119.00</p></div></div>
+        <div class="card" data-href="products/island-puff-zip-hoodie-grey.html"><div class="card-img"><img src="images/island-puff-zip-hoodie-grey.png" alt="Island Puff Print Zip Hoodie Heather Grey"></div><div class="card-info"><p class="card-name">Island Puff Print Zip Hoodie [Heather Grey]</p><p class="card-price">£119.00</p></div></div>
+        <div class="card" data-href="products/island-puff-sweatpant-black.html"><div class="card-img"><img src="images/island-puff-sweatpant-black.png" alt="Island Puff Print Open Hem Sweatpant Black"></div><div class="card-info"><p class="card-name">Island Puff Print Open Hem Sweatpant [Black]</p><p class="card-price">£95.00</p></div></div>
+        <div class="card" data-href="products/island-puff-sweatpant-grey.html"><div class="card-img"><img src="images/island-puff-sweatpant-grey.png" alt="Island Puff Print Open Hem Sweatpant Heather Grey"></div><div class="card-info"><p class="card-name">Island Puff Print Open Hem Sweatpant [Heather Grey]</p><p class="card-price">£95.00</p></div></div>
+        <div class="card" data-href="products/island-sweatshort-black.html"><div class="card-img"><img src="images/island-sweatshort-black.png" alt="Island Puff Print Sweatshort Black"></div><div class="card-info"><p class="card-name">Island Puff Print Sweatshort [Black]</p><p class="card-price">£65.00</p></div></div>
+        <div class="card" data-href="products/island-sweatshort-grey.html"><div class="card-img"><img src="images/island-sweatshort-grey.png" alt="Island Puff Print Sweatshort Heather Grey"></div><div class="card-info"><p class="card-name">Island Puff Print Sweatshort [Heather Grey]</p><p class="card-price">£65.00</p></div></div>
+
+        <!-- Mini Island -->
+        <div class="card" data-href="products/mini-island-zip-black.html"><div class="card-img"><img src="images/mini-island-zip-black.png" alt="Mini Island Zip Hoodie Black"></div><div class="card-info"><p class="card-name">Mini Island Zip Hoodie [Black]</p><p class="card-price">£119.00</p></div></div>
+        <div class="card" data-href="products/mini-island-zip-grey.html"><div class="card-img"><img src="images/mini-island-zip-grey.png" alt="Mini Island Zip Hoodie Heather Grey"></div><div class="card-info"><p class="card-name">Mini Island Zip Hoodie [Heather Grey]</p><p class="card-price">£119.00</p></div></div>
+        <div class="card" data-href="products/mini-island-sweatpant-black.html"><div class="card-img"><img src="images/mini-island-sweatpant-black.png" alt="Mini Island Sweatpant Black"></div><div class="card-info"><p class="card-name">Mini Island Sweatpant [Black]</p><p class="card-price">£85.00</p></div></div>
+        <div class="card" data-href="products/mini-island-sweatpant-grey.html"><div class="card-img"><img src="images/mini-island-sweatpant-grey.png" alt="Mini Island Sweatpant Heather Grey"></div><div class="card-info"><p class="card-name">Mini Island Sweatpant [Heather Grey]</p><p class="card-price">£85.00</p></div></div>
+        <div class="card" data-href="products/mini-island-crewneck-black.html"><div class="card-img"><img src="images/mini-island-crewneck-black.png" alt="Mini Island Crewneck Black"></div><div class="card-info"><p class="card-name">Mini Island Crewneck [Black]</p><p class="card-price">£95.00</p></div></div>
+        <div class="card" data-href="products/mini-island-crewneck-grey.html"><div class="card-img"><img src="images/mini-island-crewneck-grey.png" alt="Mini Island Crewneck Heather Grey"></div><div class="card-info"><p class="card-name">Mini Island Crewneck [Heather Grey]</p><p class="card-price">£95.00</p></div></div>
+
+        <!-- HMP -->
+        <div class="card" data-href="products/hmp-thermal-zip-black.html"><div class="card-img"><img src="images/products/hmp-thermal-zip-black/01.webp" alt="HMP Thermal Zip Hoodie Black"></div><div class="card-info"><p class="card-name">HMP Thermal Zip Hoodie [Black]</p><p class="card-price">£119.00</p></div></div>
+        <div class="card" data-href="products/hmp-thermal-zip-grey.html"><div class="card-img"><img src="images/products/hmp-thermal-zip-grey/01.webp" alt="HMP Thermal Zip Hoodie Heather Grey"></div><div class="card-info"><p class="card-name">HMP Thermal Zip Hoodie [Heather Grey]</p><p class="card-price">£119.00</p></div></div>
+        <div class="card" data-href="products/hmp-v2-sweatshirt-black.html"><div class="card-img"><img src="images/products/hmp-v2-sweatshirt-black/01.webp" alt="HMP V2 Sweatshirt Black"></div><div class="card-info"><p class="card-name">HMP V2 Sweatshirt [Black]</p><p class="card-price">£95.00</p></div></div>
+        <div class="card" data-href="products/hmp-v2-sweatshirt-grey.html"><div class="card-img"><img src="images/products/hmp-v2-sweatshirt-grey/01.webp" alt="HMP V2 Sweatshirt Heather Grey"></div><div class="card-info"><p class="card-name">HMP V2 Sweatshirt [Heather Grey]</p><p class="card-price">£95.00</p></div></div>
+        <div class="card" data-href="products/hmp-sweatpant-black.html"><div class="card-img"><img src="images/products/hmp-sweatpant-black/01.webp" alt="HMP Open Hem Sweatpant Black"></div><div class="card-info"><p class="card-name">HMP Open Hem Sweatpant [Black]</p><p class="card-price">£85.00</p></div></div>
+        <div class="card" data-href="products/hmp-sweatpant-grey.html"><div class="card-img"><img src="images/products/hmp-sweatpant-grey/01.webp" alt="HMP Open Hem Sweatpant Heather Grey"></div><div class="card-info"><p class="card-name">HMP Open Hem Sweatpant [Heather Grey]</p><p class="card-price">£85.00</p></div></div>
+        <div class="card" data-href="products/hmp-v2-sweatpant-black.html"><div class="card-img"><img src="images/products/hmp-v2-sweatpant-black/01.webp" alt="HMP V2 Sweatpant Black"></div><div class="card-info"><p class="card-name">HMP V2 Sweatpant [Black]</p><p class="card-price">£85.00</p></div></div>
+        <div class="card" data-href="products/hmp-v2-sweatpant-grey.html"><div class="card-img"><img src="images/products/hmp-v2-sweatpant-grey/01.webp" alt="HMP V2 Sweatpant Heather Grey"></div><div class="card-info"><p class="card-name">HMP V2 Sweatpant [Heather Grey]</p><p class="card-price">£85.00</p></div></div>
+        <div class="card" data-href="products/hmp-tank-black.html"><div class="card-img"><img src="images/products/hmp-tank-black/01.webp" alt="HMP Essentials Tank Top Black"></div><div class="card-info"><p class="card-name">HMP Essentials Tank Top [3pk] [Black]</p><p class="card-price">£35.00</p></div></div>
+        <div class="card" data-href="products/hmp-tank-white.html"><div class="card-img"><img src="images/products/hmp-tank-white/01.webp" alt="HMP Essentials Tank Top White"></div><div class="card-info"><p class="card-name">HMP Essentials Tank Top [3pk] [White]</p><p class="card-price">£35.00</p></div></div>
+
+        <!-- Alcatraz -->
+        <div class="card" data-href="products/alcatraz-hoodie-black.html"><div class="card-img"><img src="images/products/alcatraz-hoodie-black/01.webp" alt="Alcatraz Hoodie Triple Black"></div><div class="card-info"><p class="card-name">Alcatraz Hoodie [Triple Black]</p><p class="card-price">£145.00</p></div></div>
+        <div class="card" data-href="products/alcatraz-hoodie-bw.html"><div class="card-img"><img src="images/products/alcatraz-hoodie-bw/01.webp" alt="Alcatraz Hoodie Black White"></div><div class="card-info"><p class="card-name">Alcatraz Hoodie [Black &amp; White]</p><p class="card-price">£145.00</p></div></div>
+        <div class="card" data-href="products/alcatraz-sweatpant-black.html"><div class="card-img"><img src="images/products/alcatraz-sweatpant-black/01.webp" alt="Alcatraz Sweatpant Triple Black"></div><div class="card-info"><p class="card-name">Alcatraz Sweatpant [Triple Black]</p><p class="card-price">£110.00</p></div></div>
+        <div class="card" data-href="products/alcatraz-cargo-black.html"><div class="card-img"><img src="images/products/alcatraz-cargo-black/01.webp" alt="Alcatraz Cargo Pant Black"></div><div class="card-info"><p class="card-name">Alcatraz Cargo Pant [Black]</p><p class="card-price">£119.00</p></div></div>
+        <div class="card" data-href="products/bolo-down-jacket-black.html"><div class="card-img"><img src="images/products/bolo-down-jacket-black/01.webp" alt="Bolo Down Jacket Triple Black"></div><div class="card-info"><p class="card-name">Bolo Down Jacket [Triple Black]</p><p class="card-price">£195.00</p></div></div>
+
+        <!-- Guerillaz -->
+        <div class="card" data-href="products/guerillaz-cargo-pant-black.html"><div class="card-img"><img src="images/products/guerillaz-cargo-pant-black/01.webp" alt="Guerillaz Cargo Pant Black"></div><div class="card-info"><p class="card-name">Guerillaz Cargo Pant [Black]</p><p class="card-price">£110.00</p></div></div>
+        <div class="card" data-href="products/guerillaz-cargo-short-black.html"><div class="card-img"><img src="images/products/guerillaz-cargo-short-black/01.webp" alt="Guerillaz Cargo Short Black"></div><div class="card-info"><p class="card-name">Guerillaz Cargo Short [Black]</p><p class="card-price">£75.00</p></div></div>
+        <div class="card" data-href="products/guerillaz-thermal-tee-black.html"><div class="card-img"><img src="images/products/guerillaz-thermal-tee-black/01.webp" alt="Guerillaz Thermal LS Tee Black"></div><div class="card-info"><p class="card-name">Guerillaz Thermal LS Tee [Black]</p><p class="card-price">£65.00</p></div></div>
+        <div class="card" data-href="products/guerillaz-thermal-tee-cream.html"><div class="card-img"><img src="images/products/guerillaz-thermal-tee-cream/01.webp" alt="Guerillaz Thermal LS Tee Cream"></div><div class="card-info"><p class="card-name">Guerillaz Thermal LS Tee [Cream]</p><p class="card-price">£65.00</p></div></div>
+
+        <!-- Island Thermal -->
+        <div class="card" data-href="products/island-thermal-black.html"><div class="card-img"><img src="images/products/island-thermal-black/01.webp" alt="Island Waffle Thermal Black"></div><div class="card-info"><p class="card-name">Island Waffle Thermal [Black]</p><p class="card-price">£75.00</p></div></div>
+        <div class="card" data-href="products/island-thermal-cream.html"><div class="card-img"><img src="images/products/island-thermal-cream/01.webp" alt="Island Waffle Thermal Cream"></div><div class="card-info"><p class="card-name">Island Waffle Thermal [Cream]</p><p class="card-price">£75.00</p></div></div>
+
+        <!-- Royale -->
+        <div class="card" data-href="products/royale-ls-black.html"><div class="card-img"><img src="images/products/royale-ls-black/01.webp" alt="Royale Heavyweight Tee LS Black"></div><div class="card-info"><p class="card-name">Royale Heavyweight Tee LS [Black]</p><p class="card-price">£65.00</p></div></div>
+        <div class="card" data-href="products/royale-ls-grey.html"><div class="card-img"><img src="images/products/royale-ls-grey/01.webp" alt="Royale Heavyweight Tee LS Heather Grey"></div><div class="card-info"><p class="card-name">Royale Heavyweight Tee LS [Heather Grey]</p><p class="card-price">£65.00</p></div></div>
+        <div class="card" data-href="products/royale-heavyweight-black.html"><div class="card-img"><img src="images/products/royale-heavyweight-black/01.webp" alt="Royale Heavyweight Tee Black"></div><div class="card-info"><p class="card-name">Royale Heavyweight Tee [Black]</p><p class="card-price">£55.00</p></div></div>
+        <div class="card" data-href="products/royale-heavyweight-white.html"><div class="card-img"><img src="images/products/royale-heavyweight-white/01.webp" alt="Royale Heavyweight Tee White"></div><div class="card-info"><p class="card-name">Royale Heavyweight Tee [White]</p><p class="card-price">£55.00</p></div></div>
+
+        <!-- OG Island -->
+        <div class="card" data-href="products/og-island-ls-black.html"><div class="card-img"><img src="images/products/og-island-ls-black/01.webp" alt="OG Island LS Tee Black"></div><div class="card-info"><p class="card-name">OG Island LS Tee [Black]</p><p class="card-price">£65.00</p></div></div>
+        <div class="card" data-href="products/og-island-ls-white.html"><div class="card-img"><img src="images/products/og-island-ls-white/01.webp" alt="OG Island LS Tee White"></div><div class="card-info"><p class="card-name">OG Island LS Tee [White]</p><p class="card-price">£65.00</p></div></div>
+        <div class="card" data-href="products/og-island-ls-grey.html"><div class="card-img"><img src="images/products/og-island-ls-grey/01.webp" alt="OG Island LS Tee Heather Grey"></div><div class="card-info"><p class="card-name">OG Island LS Tee [Heather Grey]</p><p class="card-price">£65.00</p></div></div>
+        <div class="card" data-href="products/og-island-tee-black.html"><div class="card-img"><img src="images/products/og-island-tee-black/01.webp" alt="OG Island Tee Black"></div><div class="card-info"><p class="card-name">OG Island Tee [Black]</p><p class="card-price">£55.00</p></div></div>
+        <div class="card" data-href="products/og-island-tee-white.html"><div class="card-img"><img src="images/products/og-island-tee-white/01.webp" alt="OG Island Tee White"></div><div class="card-info"><p class="card-name">OG Island Tee [White]</p><p class="card-price">£55.00</p></div></div>
+        <div class="card" data-href="products/og-island-tee-grey.html"><div class="card-img"><img src="images/products/og-island-tee-grey/01.webp" alt="OG Island Tee Heather Grey"></div><div class="card-info"><p class="card-name">OG Island Tee [Heather Grey]</p><p class="card-price">£55.00</p></div></div>
+
+        <!-- Reminder Tee -->
+        <div class="card" data-href="products/reminder-tee-black.html"><div class="card-img"><img src="images/products/reminder-tee-black/01.webp" alt="Reminder Tee Black"></div><div class="card-info"><p class="card-name">Reminder Tee [Black]</p><p class="card-price">£55.00</p></div></div>
+        <div class="card" data-href="products/reminder-tee-white.html"><div class="card-img"><img src="images/products/reminder-tee-white/01.webp" alt="Reminder Tee White"></div><div class="card-info"><p class="card-name">Reminder Tee [White]</p><p class="card-price">£55.00</p></div></div>
+
+        <!-- Womens -->
+        <div class="card" data-href="products/wmns-alcatraz-top-bw.html"><div class="card-img"><img src="images/products/wmns-alcatraz-top-bw/01.webp" alt="Wmns Alcatraz Baby Top Black White"></div><div class="card-info"><p class="card-name">Wmns Alcatraz Baby Top [Black &amp; White]</p><p class="card-price">£65.00</p></div></div>
+        <div class="card" data-href="products/wmns-alcatraz-top-wb.html"><div class="card-img"><img src="images/products/wmns-alcatraz-top-wb/01.webp" alt="Wmns Alcatraz Baby Top White Black"></div><div class="card-info"><p class="card-name">Wmns Alcatraz Baby Top [White &amp; Black]</p><p class="card-price">£65.00</p></div></div>
+
+        <!-- Hats -->
+        <div class="card" data-href="products/island-trucker-hat-black.html"><div class="card-img"><img src="images/products/island-trucker-hat-black/01.webp" alt="Island Puff Print Trucker Hat Black"></div><div class="card-info"><p class="card-name">Island Puff Print Trucker Hat [Black]</p><p class="card-price">£35.00</p></div></div>
+        <div class="card" data-href="products/liteworky-cap-black.html"><div class="card-img"><img src="images/products/liteworky-cap-black/01.webp" alt="Liteworky Cap Black"></div><div class="card-info"><p class="card-name">Liteworky Cap [Black]</p><p class="card-price">£35.00</p></div></div>
+
+        <!-- Bags -->
+        <div class="card" data-href="products/island-duffle-black.html"><div class="card-img"><img src="images/products/island-duffle-black/01.webp" alt="Island Duffle Bag Black"></div><div class="card-info"><p class="card-name">Island Duffle Bag [Black]</p><p class="card-price">£85.00</p></div></div>
+        <div class="card" data-href="products/island-card-holder-black.html"><div class="card-img"><img src="images/products/island-card-holder-black/01.webp" alt="Island Leather Card Holder Black"></div><div class="card-info"><p class="card-name">Island Leather Card Holder [Black]</p><p class="card-price">£45.00</p></div></div>
+
+        <!-- Boxers -->
+        <div class="card" data-href="products/boxers-alcatraz-black.html"><div class="card-img"><img src="images/products/boxers-alcatraz-black/01.webp" alt="Black Alcatraz Boxers 3 Pack"></div><div class="card-info"><p class="card-name">Black Alcatraz Boxers [3 Pack]</p><p class="card-price">£35.00</p></div></div>
+        <div class="card" data-href="products/boxers-alcatraz-white.html"><div class="card-img"><img src="images/products/boxers-alcatraz-white/01.webp" alt="White Alcatraz Boxers 3 Pack"></div><div class="card-info"><p class="card-name">White Alcatraz Boxers [3 Pack]</p><p class="card-price">£35.00</p></div></div>
+        <div class="card" data-href="products/boxers-alcatraz-grey.html"><div class="card-img"><img src="images/products/boxers-alcatraz-grey/01.webp" alt="Grey Alcatraz Boxers 3 Pack"></div><div class="card-info"><p class="card-name">Grey Alcatraz Boxers [3 Pack]</p><p class="card-price">£35.00</p></div></div>
+        <div class="card" data-href="products/boxers-allstarz-black.html"><div class="card-img"><img src="images/products/boxers-allstarz-black/01.webp" alt="Black Allstarz Boxers 3 Pack"></div><div class="card-info"><p class="card-name">Black Allstarz Boxers [3 Pack]</p><p class="card-price">£35.00</p></div></div>
+        <div class="card" data-href="products/boxers-allstarz-white.html"><div class="card-img"><img src="images/products/boxers-allstarz-white/01.webp" alt="White Allstarz Boxers 3 Pack"></div><div class="card-info"><p class="card-name">White Allstarz Boxers [3 Pack]</p><p class="card-price">£35.00</p></div></div>
+        <div class="card" data-href="products/boxers-allstarz-grey.html"><div class="card-img"><img src="images/products/boxers-allstarz-grey/01.webp" alt="Grey Allstarz Boxers 3 Pack"></div><div class="card-info"><p class="card-name">Grey Allstarz Boxers [3 Pack]</p><p class="card-price">£35.00</p></div></div>
+
+        <!-- Socks -->
+        <div class="card" data-href="products/socks-black.html"><div class="card-img"><img src="images/products/socks-black/01.webp" alt="Black Alcatraz Socks 2 Pack"></div><div class="card-info"><p class="card-name">Black Alcatraz Socks [2 Pack]</p><p class="card-price">£18.00</p></div></div>
+        <div class="card" data-href="products/socks-white.html"><div class="card-img"><img src="images/products/socks-white/01.webp" alt="White Alcatraz Socks 2 Pack"></div><div class="card-info"><p class="card-name">White Alcatraz Socks [2 Pack]</p><p class="card-price">£18.00</p></div></div>
+
+        <!-- Footwear -->
+        <div class="card" data-href="products/crib-crep-black.html"><div class="card-img"><img src="images/products/crib-crep-black/01.webp" alt="Crib Crep Black"></div><div class="card-info"><p class="card-name">Crib Crep [Black]</p><p class="card-price">£120.00</p></div></div>
+        <div class="card" data-href="products/crib-crep-white.html"><div class="card-img"><img src="images/products/crib-crep-white/01.webp" alt="Crib Crep White"></div><div class="card-info"><p class="card-name">Crib Crep [White]</p><p class="card-price">£120.00</p></div></div>
+
+        <!-- Gloves -->
+        <div class="card" data-href="products/leather-gloves-black.html"><div class="card-img"><img src="images/products/leather-gloves-black/01.webp" alt="Leather Gloves Black"></div><div class="card-info"><p class="card-name">Leather Gloves [Black]</p><p class="card-price">£65.00</p></div></div>
+        <div class="card" data-href="products/leather-gloves-white.html"><div class="card-img"><img src="images/products/leather-gloves-white/01.webp" alt="Leather Gloves White"></div><div class="card-info"><p class="card-name">Leather Gloves [White]</p><p class="card-price">£65.00</p></div></div>
+
+      </div>
+      </div><!-- /.grid-wrap -->
+    </main>
+
+  </div>
+
+  <!-- Mobile catalog nav overlay -->
+  <div class="mobile-nav-overlay" id="mobile-nav-overlay">
+    <ul>
+      <li><a href="index.html" class="active">All</a></li>
+      <li><a href="collections/classic.html">Classic</a></li>
+      <li><a href="collections/t-shirts.html">T-Shirts</a></li>
+      <li><a href="collections/tops.html">Tops / Jackets</a></li>
+      <li><a href="collections/sweatshirts.html">Sweatshirts</a></li>
+      <li><a href="collections/jackets.html">Jackets</a></li>
+      <li><a href="collections/bottoms.html">Bottoms</a></li>
+      <li><a href="collections/shorts.html">Shorts</a></li>
+      <li><a href="collections/hats.html">Hats</a></li>
+      <li><a href="collections/bags.html">Bags</a></li>
+      <li><a href="collections/accessories.html">Accessories</a></li>
+      <li><a href="collections/womens.html">Womens</a></li>
+    </ul>
+  </div>
+
+  <!-- Mobile search overlay -->
+  <div class="mobile-search-overlay" id="mobile-search-overlay">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,213,0,0.5)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" id="mobile-search-input" placeholder="Search products…" autofocus>
+    <button class="mobile-search-close" onclick="toggleMobileSearch()">✕</button>
+  </div>
+
+  <!-- Cart overlay -->
+  <div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
+
+  <!-- Cart drawer -->
+  <div class="cart-drawer" id="cart-drawer">
+    <div class="cart-drawer-head">
+      <span>Your Bag</span>
+      <button class="cart-close" onclick="toggleCart()">✕</button>
+    </div>
+    <div class="cart-list" id="cart-list">
+      <p class="cart-empty">Your bag is empty.</p>
+    </div>
+    <div class="cart-drawer-foot">
+      <div class="cart-total">Total&nbsp; <span id="cart-total">£0.00</span></div>
+      <button class="cart-checkout-btn">Checkout</button>
+    </div>
+  </div>
+
+  <script>
+    /* ─── Cursor (desktop only — disabled on touch devices) ─── */
+    const cur = document.getElementById('cursor');
+    const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    if (isTouch) {
+      cur.style.display = 'none';
+    } else {
+      document.addEventListener('mousemove', e => {
+        cur.style.left = e.clientX + 'px';
+        cur.style.top  = e.clientY + 'px';
+      });
+    }
+
+    /* ─── Mobile catalog nav ─── */
+    function toggleMobileNav() {
+      const nav = document.getElementById('mobile-nav-overlay');
+      const btn = document.getElementById('mobile-catalog-btn');
+      const isOpen = nav.classList.toggle('open');
+      btn.classList.toggle('active', isOpen);
+      // Close search if open
+      document.getElementById('mobile-search-overlay').classList.remove('open');
+      document.getElementById('mobile-search-btn').classList.remove('active');
+    }
+
+    /* ─── Mobile search ─── */
+    function toggleMobileSearch() {
+      const overlay = document.getElementById('mobile-search-overlay');
+      const btn     = document.getElementById('mobile-search-btn');
+      const isOpen  = overlay.classList.toggle('open');
+      btn.classList.toggle('active', isOpen);
+      if (isOpen) {
+        setTimeout(() => document.getElementById('mobile-search-input').focus(), 50);
+      }
+      // Close nav if open
+      document.getElementById('mobile-nav-overlay').classList.remove('open');
+      document.getElementById('mobile-catalog-btn').classList.remove('active');
+    }
+
+    /* ─── Splash ─── */
+    function enter() {
+      sessionStorage.setItem('crtz_entered', '1');
+      const splash = document.getElementById('splash');
+      const shell  = document.getElementById('shell');
+      splash.classList.add('out');
+      setTimeout(() => {
+        splash.style.display = 'none';
+        shell.classList.add('visible');
+      }, 500);
+    }
+
+    /* Skip splash if already entered this session */
+    if (sessionStorage.getItem('crtz_entered')) {
+      document.getElementById('splash').style.display = 'none';
+      document.getElementById('shell').classList.add('visible');
+    }
+
+
+    /* ─── Cart ─── */
+    const cart = [];
+
+    function toggleCart() {
+      document.getElementById('cart-drawer').classList.toggle('open');
+      document.getElementById('cart-overlay').classList.toggle('open');
+    }
+
+    function addToCart(name, price, imgSrc) {
+      const existing = cart.find(i => i.name === name);
+      if (existing) {
+        existing.qty++;
+      } else {
+        cart.push({ name, price, imgSrc, qty: 1 });
+      }
+      renderCart();
+    }
+
+    function adjustQty(name, delta) {
+      const idx = cart.findIndex(i => i.name === name);
+      if (idx === -1) return;
+      cart[idx].qty += delta;
+      if (cart[idx].qty <= 0) cart.splice(idx, 1);
+      renderCart();
+    }
+
+    function renderCart() {
+      const count = cart.reduce((sum, i) => sum + i.qty, 0);
+      document.getElementById('cart-count').textContent = count;
+      document.getElementById('mobile-cart-count').textContent = count;
+
+      const total = cart.reduce((sum, i) => {
+        const num = parseFloat(i.price.replace(/[^0-9.]/g, ''));
+        return sum + num * i.qty;
+      }, 0);
+      document.getElementById('cart-total').textContent = '£' + total.toFixed(2);
+
+      const list = document.getElementById('cart-list');
+      if (cart.length === 0) {
+        list.innerHTML = '<p class="cart-empty">Your bag is empty.</p>';
+        return;
+      }
+      list.innerHTML = cart.map(item => `
+        <div class="cart-item">
+          <img src="${item.imgSrc}" alt="${item.name}">
+          <div class="cart-item-info">
+            <p class="cart-item-name">${item.name}</p>
+            <p class="cart-item-price">${item.price}</p>
+            <div class="cart-item-qty">
+              <button onclick="adjustQty('${item.name.replace(/'/g, "\\'")}', -1)">−</button>
+              <span>${item.qty}</span>
+              <button onclick="adjustQty('${item.name.replace(/'/g, "\\'")}', 1)">+</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    /* ─── Wire up cards ─── */
+    document.querySelectorAll('.card').forEach(card => {
+      const href = card.dataset.href;
+
+      // Add overlay label
+      const overlay = document.createElement('div');
+      overlay.className = 'card-add-overlay';
+      overlay.innerHTML = href
+        ? '<span class="card-add-label">View Product</span>'
+        : '<span class="card-add-label">Add to Bag</span>';
+      card.querySelector('.card-img').appendChild(overlay);
+
+      card.addEventListener('click', () => {
+        if (href) {
+          window.location.href = href;
+        } else {
+          const name   = card.querySelector('.card-name').textContent;
+          const price  = card.querySelector('.card-price').textContent;
+          const imgSrc = card.querySelector('.card-img img').src;
+          addToCart(name, price, imgSrc);
+          toggleCart();
+        }
+      });
+    });
+
+    /* ─── Search filter (desktop + mobile) ─── */
+    function applySearch(q) {
+      const query = q.trim().toLowerCase();
+      document.querySelectorAll('.card').forEach(card => {
+        const name = card.querySelector('.card-name').textContent.toLowerCase();
+        card.style.display = (!query || name.includes(query)) ? '' : 'none';
+      });
+    }
+
+    document.getElementById('search-input').addEventListener('input', function () {
+      applySearch(this.value);
+    });
+
+    document.getElementById('mobile-search-input').addEventListener('input', function () {
+      applySearch(this.value);
+    });
+  </script>
+
+</body>
+</html>

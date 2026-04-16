@@ -1,0 +1,317 @@
+/* ============================================================
+   CORTEIZ (CRTZ) — Design System
+   Extracted from crtz.xyz / corteiz.myshopify.com
+   ============================================================ */
+
+/* ============================================================
+   1. COLOUR PALETTE
+   ============================================================ */
+
+:root {
+  /* Brand primary */
+  --color-yellow:        #ffd500;   /* Primary brand — used 66x, badges, highlights, CTAs */
+  --color-yellow-25:     rgba(255, 213, 0, 0.25);
+  --color-yellow-50:     rgba(255, 213, 0, 0.50);
+
+  /* Neutrals */
+  --color-black:         #000000;
+  --color-off-black:     #191919;
+  --color-dark:          #333333;
+  --color-mid:           #555555;
+  --color-muted:         #888888;
+  --color-subtle:        #999999;
+  --color-border:        #b3b3b3;
+  --color-divider:       #cccccc;
+  --color-silver:        #c0c0c0;
+  --color-white:         #ffffff;
+
+  /* Transparency overlays */
+  --color-black-10:      rgba(0, 0, 0, 0.10);
+  --color-black-60:      rgba(0, 0, 0, 0.60);  /* #000c */
+  --color-black-90:      rgba(0, 0, 0, 0.90);
+  --color-white-10:      rgba(255, 255, 255, 0.10);
+
+  /* Red / Error / Sale */
+  --color-red:           #a20000;   /* Primary red — used 18x on sale badges */
+  --color-red-dark:      #6f0000;
+  --color-red-darker:    #3c0000;
+  --color-red-mid:       #b62b2b;
+  --color-red-light:     #c8493f;
+  --color-red-pale:      #fff0f0;
+
+  /* Status */
+  --color-success:       #56ad6a;
+  --color-success-pale:  #ecfef0;
+
+  /* Accent (checkout / Shopify Pay) */
+  --color-blue:          #010097;
+  --color-blue-dark:     #01006e;
+}
+
+
+/* ============================================================
+   2. TYPOGRAPHY
+   ============================================================ */
+
+:root {
+  /* Fonts */
+  --font-body:           'Karla', sans-serif;  /* Primary body font — Google Fonts, wt 400 & 700 */
+
+  /* Weights */
+  --font-weight-normal:  400;
+  --font-weight-bold:    700;
+
+  /* Scale (px base) */
+  --text-xs:    11px;
+  --text-sm:    12px;
+  --text-base:  14px;
+  --text-md:    16px;
+  --text-lg:    20px;
+  --text-xl:    24px;
+
+  /* Relative scale (em) — headings */
+  --text-h6:    0.83333em;
+  --text-h5:    1.08333em;
+  --text-h4:    1.25em;
+  --text-h3:    1.41667em;
+  --text-h2:    1.75em;
+  --text-h1:    2.08333em;
+  --text-display: 2.75em;
+
+  /* Line heights */
+  --leading-tight:   1.1;
+  --leading-snug:    1.2;
+  --leading-normal:  1.4;
+  --leading-relaxed: 1.6;
+
+  /* Letter spacing */
+  --tracking-wide:  0.1em;   /* Used on uppercase labels, nav */
+  --tracking-tight: 1px;
+
+  /* Text transform — brand is heavily uppercase */
+  --transform-brand: uppercase;
+}
+
+
+/* ============================================================
+   3. SPACING
+   ============================================================ */
+
+:root {
+  --space-1:   4px;
+  --space-2:   8px;
+  --space-3:   12px;
+  --space-4:   16px;
+  --space-5:   20px;
+  --space-6:   24px;
+  --space-8:   32px;
+  --space-10:  40px;
+  --space-12:  48px;
+  --space-16:  64px;
+}
+
+
+/* ============================================================
+   4. BORDER RADIUS
+   ============================================================ */
+
+:root {
+  --radius-none:   0;       /* Default — brand uses sharp edges predominantly */
+  --radius-sm:     4px;
+  --radius-md:     5px;
+  --radius-lg:     10px;
+  --radius-xl:     12px;
+  --radius-2xl:    20px;
+  --radius-full:   50%;
+}
+
+
+/* ============================================================
+   5. BREAKPOINTS
+   ============================================================ */
+
+/*
+  Mobile-first breakpoints:
+    sm  — 480px
+    md  — 750px   (main mobile/desktop split)
+    lg  — 990px   (desktop full)
+    xl  — 1280px  (wide)
+
+  CSS usage pattern from source:
+    @media only screen and (max-width: 749px)  { ... }   → mobile only
+    @media only screen and (min-width: 750px)  { ... }   → tablet+
+    @media only screen and (min-width: 990px)  { ... }   → desktop+
+    @media only screen and (max-width: 989px)  { ... }   → below desktop
+*/
+
+:root {
+  --bp-sm:   480px;
+  --bp-md:   750px;
+  --bp-lg:   990px;
+  --bp-xl:  1280px;
+
+  /* Content containers */
+  --container-max:  1280px;
+  --container-md:    900px;
+  --container-sm:    600px;
+}
+
+
+/* ============================================================
+   6. TRANSITIONS & ANIMATION
+   ============================================================ */
+
+:root {
+  --ease-fast:      0.1s cubic-bezier(0.44, 0.13, 0.48, 0.87);
+  --ease-base:      0.2s ease;
+  --ease-standard:  0.3s ease;
+  --ease-slow:      0.5s ease-in-out;
+  --ease-crawl:     1s ease-in-out;
+}
+
+
+/* ============================================================
+   7. Z-INDEX SCALE
+   ============================================================ */
+
+:root {
+  --z-below:     -1;
+  --z-base:       1;
+  --z-above:      2;
+  --z-raised:     3;
+  --z-sticky:    10;
+  --z-overlay:  9998;
+  --z-drawer:   9999;
+  --z-modal:   10000;
+  --z-toast:   99999;
+}
+
+
+/* ============================================================
+   8. COMPONENT TOKENS — BUTTONS
+   ============================================================ */
+
+:root {
+  /* Primary button */
+  --btn-bg:          var(--color-yellow);
+  --btn-color:       var(--color-black);
+  --btn-font-weight: var(--font-weight-bold);
+  --btn-transform:   uppercase;
+  --btn-tracking:    var(--tracking-wide);
+  --btn-radius:      var(--radius-none);
+  --btn-height:      44px;
+  --btn-padding-x:   1.5em;
+
+  /* Secondary / ghost */
+  --btn-secondary-bg:      transparent;
+  --btn-secondary-color:   var(--color-black);
+  --btn-secondary-border:  1px solid var(--color-black);
+
+  /* Danger / sale */
+  --btn-danger-bg:    var(--color-red);
+  --btn-danger-color: var(--color-white);
+}
+
+
+/* ============================================================
+   9. COMPONENT TOKENS — BADGES
+   ============================================================ */
+
+:root {
+  --badge-sale-bg:     var(--color-red);
+  --badge-sale-color:  var(--color-white);
+  --badge-new-bg:      var(--color-yellow);
+  --badge-new-color:   var(--color-black);
+  --badge-font-size:   var(--text-xs);
+  --badge-font-weight: var(--font-weight-bold);
+  --badge-transform:   uppercase;
+  --badge-tracking:    var(--tracking-wide);
+}
+
+
+/* ============================================================
+   10. COMPONENT TOKENS — FORMS / INPUTS
+   ============================================================ */
+
+:root {
+  --input-border:        1px solid var(--color-border);
+  --input-radius:        var(--radius-none);
+  --input-height:        44px;
+  --input-padding-x:     var(--space-4);
+  --input-font-size:     var(--text-base);
+  --input-bg:            var(--color-white);
+  --input-color:         var(--color-black);
+  --input-placeholder:   var(--color-muted);
+  --input-focus-border:  var(--color-yellow);
+  --input-error-border:  var(--color-red);
+  --input-error-color:   var(--color-red);
+}
+
+
+/* ============================================================
+   11. UTILITY CLASSES
+   ============================================================ */
+
+/* Brand uppercase label style */
+.crtz-label {
+  font-family:     var(--font-body);
+  font-weight:     var(--font-weight-bold);
+  font-size:       var(--text-sm);
+  letter-spacing:  var(--tracking-wide);
+  text-transform:  var(--transform-brand);
+  line-height:     var(--leading-tight);
+}
+
+/* Yellow highlight / badge */
+.crtz-badge {
+  display:         inline-block;
+  background:      var(--badge-new-bg);
+  color:           var(--badge-new-color);
+  font-size:       var(--badge-font-size);
+  font-weight:     var(--badge-font-weight);
+  letter-spacing:  var(--badge-tracking);
+  text-transform:  var(--badge-transform);
+  padding:         2px 6px;
+  border-radius:   var(--radius-none);
+}
+
+.crtz-badge--sale {
+  background: var(--badge-sale-bg);
+  color:      var(--badge-sale-color);
+}
+
+/* Primary button */
+.crtz-btn {
+  display:         inline-flex;
+  align-items:     center;
+  justify-content: center;
+  height:          var(--btn-height);
+  padding:         0 var(--btn-padding-x);
+  background:      var(--btn-bg);
+  color:           var(--btn-color);
+  font-family:     var(--font-body);
+  font-weight:     var(--btn-font-weight);
+  font-size:       var(--text-base);
+  letter-spacing:  var(--tracking-wide);
+  text-transform:  var(--btn-transform);
+  border:          none;
+  border-radius:   var(--btn-radius);
+  cursor:          pointer;
+  transition:      var(--ease-base);
+  text-decoration: none;
+}
+
+.crtz-btn:hover {
+  opacity: 0.85;
+}
+
+.crtz-btn--secondary {
+  background:    var(--btn-secondary-bg);
+  color:         var(--btn-secondary-color);
+  border:        var(--btn-secondary-border);
+}
+
+.crtz-btn--danger {
+  background: var(--btn-danger-bg);
+  color:      var(--btn-danger-color);
+}
