@@ -33,7 +33,8 @@
     .shell {
       display: grid;
       grid-template-columns: 162px 1fr;
-      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
     }
 
     /* ─── Sidebar ─── */
@@ -144,9 +145,15 @@
 
     /* ─── Main ─── */
     .main {
-      min-height: 100vh;
+      height: 100vh;
+      overflow-y: auto;
       padding: 0;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.08) transparent;
     }
+
+    .main::-webkit-scrollbar { width: 4px; }
+    .main::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
 
     /* ─── Top bar ─── */
     .top-bar {
@@ -442,6 +449,7 @@
       display: flex;
       gap: 8px;
       flex-shrink: 0;
+      flex-wrap: wrap;
     }
 
     .thumb {
@@ -540,7 +548,7 @@
       padding: 0 10px;
       background: transparent;
       border: 1px solid rgba(255,213,0,0.2);
-      color: rgba(255,213,0,0.5);
+      color: rgba(204, 40, 40, 1);
       font-family: var(--font-body);
       font-size: 11px;
       font-weight: 700;
@@ -623,7 +631,7 @@
       font-weight: 400;
       letter-spacing: 0.06em;
       text-transform: uppercase;
-      color: rgba(255,213,0,0.35);
+      color: rgba(204, 40, 40, 1);
       margin-bottom: 20px;
     }
 
@@ -706,22 +714,20 @@
       <div class="sidebar-brand">
         <a href="../index.html"><img src="../crtzlogo.png" alt="CRTZ"></a>
       </div>
-            <nav class="sidebar-nav">
+      <nav class="sidebar-nav">
         <ul>
           <li><a href="../index.html">All</a></li>
-          <li><a href="../collections/classic.html">Classic</a></li>
-          <li><a href="#" style="opacity:0.25;pointer-events:none">Cords</a></li>
-          <li><a href="../collections/t-shirts.html">T-Shirts</a></li>
-          <li><a href="../collections/tops.html">Tops / Jackets</a></li>
-          <li><a href="../collections/sweatshirts.html">Sweatshirts</a></li>
-          <li><a href="../collections/jackets.html">Jackets</a></li>
-          <li><a href="#" style="opacity:0.25;pointer-events:none">Shirts</a></li>
-          <li><a href="../collections/bottoms.html">Bottoms</a></li>
-          <li><a href="../collections/shorts.html">Shorts</a></li>
-          <li><a href="../collections/hats.html">Hats</a></li>
-          <li><a href="../collections/bags.html">Bags</a></li>
-          <li><a href="../collections/accessories.html">Accessories</a></li>
-          <li><a href="../collections/womens.html">Womens</a></li>
+          <li><a href="../index.html">Classic</a></li>
+          <li><a href="../index.html">T-Shirts</a></li>
+          <li><a href="../index.html">Tops / Jackets</a></li>
+          <li><a href="../index.html">Sweatshirts</a></li>
+          <li><a href="../index.html">Jackets</a></li>
+          <li><a href="../index.html">Bottoms</a></li>
+          <li><a href="../index.html">Shorts</a></li>
+          <li><a href="../index.html">Hats</a></li>
+          <li><a href="../index.html">Bags</a></li>
+          <li><a href="../index.html">Accessories</a></li>
+          <li><a href="../index.html">Womens</a></li>
         </ul>
       </nav>
       <div class="sidebar-foot">
@@ -757,7 +763,6 @@
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
             Cart (<span id="cart-count">0</span>)
           </button>
-          <button class="header-btn header-checkout">Checkout</button>
         </div>
       </div>
 
@@ -766,7 +771,7 @@
         <!-- Images -->
         <div class="product-images">
           <div class="product-main-img">
-            <img id="main-img" src="../images/products/island-puff-zip-hoodie-black/01.webp" alt="Island Puff Print Zip Hoodie Black">
+            <img id="main-img" src="../images/products/island-puff-zip-hoodie-black/01.webp" alt="Island Puff Print Zip Hoodie [Black]">
           </div>
           <div class="product-thumbs">
             <div class="thumb active" onclick="setImg('../images/products/island-puff-zip-hoodie-black/01.webp', this)">
@@ -901,9 +906,9 @@
             <p class="cart-item-name">${item.name}</p>
             <p class="cart-item-price">${item.price}</p>
             <div class="cart-item-qty">
-              <button onclick="adjustQty('${item.name.replace(/'/g, "\\'")}', -1)">−</button>
+              <button onclick="adjustQty('${item.name.replace(/'/g, "\\'")}',-1)">−</button>
               <span>${item.qty}</span>
-              <button onclick="adjustQty('${item.name.replace(/'/g, "\\'")}', 1)">+</button>
+              <button onclick="adjustQty('${item.name.replace(/'/g, "\\'")}'",1)">+</button>
             </div>
           </div>
         </div>

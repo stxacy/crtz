@@ -14,6 +14,27 @@ IMAGES_DIR = "C:/Users/vikra/Project Ai/crtz/images/products"
 
 PRODUCTS = [
   {
+    "slug": "island-puff-zip-hoodie-black",
+    "name": "Island Puff Print Zip Hoodie<br>[Black]",
+    "title": "Island Puff Print Zip Hoodie [Black]",
+    "price": "£119.00",
+    "sizes": ["XS","S","M","L","XL","XXL"],
+    "variants": [
+      ("Black",        "island-puff-zip-hoodie-black", "../images/island-puff-zip-hoodie-black.png"),
+      ("Heather Grey", "island-puff-zip-hoodie-grey",  "../images/island-puff-zip-hoodie-grey.png"),
+    ],
+    "active_variant": "island-puff-zip-hoodie-black",
+    "desc": [
+      "440GSM 100% Cotton Fleece.",
+      "Puff Print Alcatraz Logo Left Chest &amp; Centre Back.",
+      "Coverstitch Detailing Throughout.",
+      "YKK Metal Two-Way Zipper.",
+      "Ribbed Cuffs &amp; Bottom Hem.",
+      "True to Size — Boxy Relaxed Fit.",
+    ],
+    "model": "Javel is 5'9\" / 175cm wearing size Medium.",
+  },
+  {
     "slug": "island-puff-zip-hoodie-grey",
     "name": "Island Puff Print Zip Hoodie<br>[Heather Grey]",
     "title": "Island Puff Print Zip Hoodie [Heather Grey]",
